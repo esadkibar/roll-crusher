@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merdaneli Kırıcı Hesaplama Aracı</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: auto; }
+        label, select, input { display: block; margin: 10px 0; width: 100%; }
+        button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Merdaneli Kırıcı Hesaplama Aracı</h2>
+        
+        <h3>Genel Değerler</h3>
+        <label for="d">Merdane Çapı (D) (cm):</label>
+        <input type="number" id="d">
+
+        <label for="s">Merdane Arası Mesafe (S) (cm):</label>
+        <input type="number" id="s">
+
+        <label for="w">Merdane Eni (W) (cm):</label>
+        <input type="number" id="w">
+
+        <label for="n">Merdane Hızı (N) (dev/dakika):</label>
+        <input type="number" id="n">
+
+        <label for="g">Cevher Özgül Ağırlığı (g) (g/cm³):</label>
+        <input type="number" id="g">
+
+        <button onclick="calculateAll()">Hesapla</button>
+        
+        <h3>Sonuçlar</h3>
+        <h4>Maksimum Besleme Tane Boyutu (d_max): <span id="resultDmax">-</span> cm</h4>
+        <h4>Kırıcı Teorik Kapasitesi (C_T): <span id="resultCT">-</span> ton/saat</h4>
+    </div>
+
+    <script>
+        function calculateAll() {
+            let d = document.getElementById("d").value.trim();
+            let s = document.getElementById("s").value.trim();
+            let w = document.getElementById("w").value.trim();
+            let n = document.getElementById("n").value.trim();
+            let g = document.getElementById("g").value.trim();
+            
+            let missingFields = [];
+            if (!d) missingFields.push("Merdane Çapı (D)");
+            if (!s) missingFields.push("Merdane Arası Mesafe (S)");
+            if (!w) missingFields.push("Merdane Eni (W)");
+            if (!n) missingFields.push("Merdane Hızı (N)");
+            if (!g) missingFields.push("Cevher Özgül Ağırlığı (g)");
+            
+            if (missingFields.length > 0) {
+                alert("Lütfen aşağıdaki eksik değerleri giriniz:\n" + missingFields.join("\n"));
+            }
+            
+            if (d && s) {
+                let d_max = parseFloat(s) + (parseFloat(d) / 40);
+                document.getElementById("resultDmax").textContent = d_max.toFixed(2);
+            }
+            
+            if (d && s && w && n && g) {
+                let ct = (60 * Math.PI * parseFloat(d) * parseFloat(s) * parseFloat(n) * parseFloat(g) * parseFloat(w)) / Math.pow(10, 6);
+                document.getElementById("resultCT").textContent = ct.toFixed(2);
+            }
+        }
+    </script>
+</body>
+</html>
