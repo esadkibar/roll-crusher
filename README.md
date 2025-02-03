@@ -9,6 +9,7 @@ Cevher hazırlama ve madencilik sektöründe **merdaneli kırıcıların kapasit
 ✅ **Kırıcı Teorik Kapasitesi (\(C_T\)) Hesaplama:** Merdane çapı, genişliği, dönüş hızı ve cevher özelliklerine göre kapasite tahmini yapın.  
 
 🔗 **Projeyi link üzerinden inceleyebilirsiniz!**  
+https://esadkibar.github.io/roll-crusher/
 
 Cevher hazırlama, madencilik ve mühendislik alanındaki herkes için faydalı olmasını dilerim. **Geri bildirimlerinizi ve geliştirme önerilerinizi bekliyorum!**  
 
