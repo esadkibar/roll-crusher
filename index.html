@@ -3,70 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merdaneli Kırıcı Hesaplama Aracı</title>
+    <title>Merdaneli Kırıcı Kapasite Hesaplama Aracı</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .container { max-width: 600px; margin: auto; }
-        label, select, input { display: block; margin: 10px 0; width: 100%; }
-        button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
+        /* Genel Ayarlar */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; line-height: 1.6; background-color: #f4f7f6; color: #333; }
+        
+        /* Sayfa Yüklenme Animasyonu */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container { 
+            max-width: 600px; margin: auto; background: white; padding: 30px; 
+            border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        .project-header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .project-header h2 { margin: 0; color: #333; }
+        
+        .info-box { background-color: #f0f7ff; padding: 15px; border-left: 5px solid #007bff; border-radius: 4px; margin-bottom: 25px; font-size: 0.95em; color: #0056b3; }
+        
+        .section-title { margin-top: 25px; margin-bottom: 10px; color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-size: 1.1em; font-weight: bold; }
+        
+        label { font-weight: 600; display: block; margin-top: 15px; font-size: 0.9em; }
+        
+        /* Input ve Select Animasyonları */
+        select, input[type="number"] { 
+            width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; 
+            border-radius: 6px; box-sizing: border-box; font-size: 1em;
+            transition: all 0.3s ease; 
+        }
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        }
+        
+        /* Şık Formül Kutusu */
+        .formula-box { background-color: #fafbfc; border: 1px dashed #b0c4de; padding: 15px; margin-top: 25px; border-radius: 8px; font-family: 'Cambria Math', 'Times New Roman', serif; text-align: center; color: #444; }
+        .formula-box h4 { margin: 0 0 10px 0; font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 0.9em; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        .math-line { margin: 8px 0; font-size: 1.1em; }
+        .math-fraction { display: inline-block; vertical-align: middle; text-align: center; margin: 0 5px; }
+        .math-numerator { border-bottom: 1px solid #444; padding: 0 5px; }
+        .math-denominator { padding: 0 5px; }
+
+        /* Buton Animasyonları */
+        button { 
+            width: 100%; padding: 15px; margin-top: 25px; background-color: #007bff; 
+            color: white; border: none; border-radius: 6px; font-size: 1.1em; 
+            font-weight: bold; cursor: pointer; transition: all 0.2s ease; 
+        }
+        button:hover { background-color: #0056b3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4); }
+        button:active { transform: scale(0.97); } 
+        
+        /* Sonuç Kutusu */
+        .result-box { margin-top: 25px; padding: 20px; background-color: #e6fffa; color: #234e52; border: 1px solid #b2f5ea; border-radius: 8px; transition: all 0.3s; }
+        .result-item { margin-bottom: 15px; }
+        .result-item span { font-weight: normal; font-size: 0.9em; display: block; color: #4a5568; }
+        .result-item h3 { margin: 5px 0 0 0; font-size: 1.4em; color: #2c7a7b; }
+        
+        @keyframes pulseResult {
+            0% { transform: scale(1); box-shadow: 0 0 0 rgba(40, 167, 69, 0); }
+            50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(40, 167, 69, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        .animate-pulse { animation: pulseResult 0.5s ease-out; }
+
+        .footer { margin-top: 40px; font-size: 0.9em; text-align: center; color: #555; border-top: 1px solid #eee; padding-top: 20px; }
+        .highlight { color: #007bff; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Merdaneli Kırıcı Hesaplama Aracı</h2>
+        <div class="project-header">
+            <h2>Merdaneli Kırıcı Hesaplama Aracı</h2>
+        </div>
         
-        <h3>Genel Değerler</h3>
-        <label for="d">Merdane Çapı (D) (cm):</label>
-        <input type="number" id="d">
+        <div class="info-box">
+            Cevher hazırlama tesislerinde <strong>merdaneli kırıcıların kapasitesini (C<sub>T</sub>)</strong> ve kırıcıya beslenebilecek <strong>maksimum tane boyutunu (d<sub>max</sub>)</strong> belirlemek için kullanılan mühendislik aracıdır.
+        </div>
 
-        <label for="s">Merdane Arası Mesafe (S) (cm):</label>
-        <input type="number" id="s">
-
-        <label for="w">Merdane Eni (W) (cm):</label>
-        <input type="number" id="w">
-
-        <label for="n">Merdane Hızı (N) (dev/dakika):</label>
-        <input type="number" id="n">
-
-        <label for="g">Cevher Özgül Ağırlığı (g) (g/cm³):</label>
-        <input type="number" id="g">
-
-        <button onclick="calculateAll()">Hesapla</button>
+        <div class="section-title">⚙️ Merdane Özellikleri</div>
         
-        <h3>Sonuçlar</h3>
-        <h4>Maksimum Besleme Tane Boyutu (d_max): <span id="resultDmax">-</span> cm</h4>
-        <h4>Kırıcı Teorik Kapasitesi (C_T): <span id="resultCT">-</span> ton/saat</h4>
+        <label for="d">Merdane Çapı (D) [cm]:</label>
+        <input type="number" id="d" min="0" step="0.1" placeholder="Örn: 100">
+
+        <label for="w">Merdane Eni (W) [cm]:</label>
+        <input type="number" id="w" min="0" step="0.1" placeholder="Örn: 40">
+
+        <label for="s">Merdane Arası Mesafe (S) [cm]:</label>
+        <input type="number" id="s" min="0" step="0.1" placeholder="Örn: 5">
+
+        <label for="n">Merdane Hızı (N) [dev/dak]:</label>
+        <input type="number" id="n" min="0" step="1" placeholder="Örn: 150">
+
+        <div class="section-title">🪨 Cevher Özellikleri</div>
+        
+        <label for="g_select">Cevher Özgül Ağırlığı (g) [g/cm³]:</label>
+        <select id="g_select" onchange="document.getElementById('g_manual').value=''">
+            <option value="">Manuel Giriş Yapacağım</option>
+            <option value="1.4">Kömür (1.4)</option>
+            <option value="2.65">Kuvars / Kireçtaşı (2.65)</option>
+            <option value="2.7">Kalsit (2.7)</option>
+            <option value="4.2">Kalkopirit (Bakır Cevheri) (4.2)</option>
+            <option value="4.6">Kromit (4.6)</option>
+            <option value="5.1">Manyetit / Pirit (5.1)</option>
+            <option value="5.2">Hematit (5.2)</option>
+            <option value="7.5">Galen (Kurşun Cevheri) (7.5)</option>
+        </select>
+        <input type="number" id="g_manual" min="0" step="0.1" placeholder="Veya manuel özgül ağırlık girin" oninput="document.getElementById('g_select').value=''">
+
+        <div class="formula-box">
+            <h4>Kullanılan Formüller</h4>
+            <div class="math-line">
+                <i>d<sub>max</sub></i> = <i>S</i> + ( <i>D</i> / 40 )
+            </div>
+            <div class="math-line" style="margin-top:15px;">
+                <i>C<sub>T</sub></i> = 
+                <div class="math-fraction">
+                    <div class="math-numerator">60 × π × <i>D</i> × <i>S</i> × <i>N</i> × <i>g</i> × <i>W</i></div>
+                    <div class="math-denominator">10<sup>6</sup></div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="calculateAll()">Sonuçları Hesapla</button>
+        
+        <div class="result-box" id="result_container">
+            <div class="result-item">
+                <span>Maksimum Besleme Tane Boyutu (d<sub>max</sub>):</span>
+                <h3><span id="resultDmax">0.00</span> cm</h3>
+            </div>
+            <div class="result-item" style="border-top: 1px solid #b2f5ea; padding-top: 15px;">
+                <span>Kırıcı Teorik Kapasitesi (C<sub>T</sub>):</span>
+                <h3><span id="resultCT">0.00</span> ton/saat</h3>
+            </div>
+        </div>
+
+        <div class="footer">
+            Proje Sahibi: <strong>Esad Kibar</strong><br>
+            <span class="highlight">İTÜ Cevher Hazırlama Mühendisliği</span>
+        </div>
     </div>
 
     <script>
         function calculateAll() {
-            let d = document.getElementById("d").value.trim();
-            let s = document.getElementById("s").value.trim();
-            let w = document.getElementById("w").value.trim();
-            let n = document.getElementById("n").value.trim();
-            let g = document.getElementById("g").value.trim();
+            let d = parseFloat(document.getElementById("d").value);
+            let s = parseFloat(document.getElementById("s").value);
+            let w = parseFloat(document.getElementById("w").value);
+            let n = parseFloat(document.getElementById("n").value);
             
-            let missingFields = [];
-            if (!d) missingFields.push("Merdane Çapı (D)");
-            if (!s) missingFields.push("Merdane Arası Mesafe (S)");
-            if (!w) missingFields.push("Merdane Eni (W)");
-            if (!n) missingFields.push("Merdane Hızı (N)");
-            if (!g) missingFields.push("Cevher Özgül Ağırlığı (g)");
+            // Özgül Ağırlık Seçimi (Manuel öncelikli)
+            let gSelect = document.getElementById("g_select").value;
+            let gManual = document.getElementById("g_manual").value;
+            let g = gManual ? parseFloat(gManual) : parseFloat(gSelect);
             
-            if (missingFields.length > 0) {
-                alert("Lütfen aşağıdaki eksik değerleri giriniz:\n" + missingFields.join("\n"));
+            // Boş veya sıfır kontrolü
+            if (!d || !s || !w || !n || !g || d <= 0 || s <= 0 || w <= 0 || n <= 0 || g <= 0) {
+                alert("Lütfen tüm alanlara sıfırdan büyük geçerli değerler giriniz.");
+                return;
             }
             
-            if (d && s) {
-                let d_max = parseFloat(s) + (parseFloat(d) / 40);
-                document.getElementById("resultDmax").textContent = d_max.toFixed(2);
+            // Mantıksal Validasyon
+            if (s >= d) {
+                alert("Hata: Merdane arası mesafe (S), merdane çapından (D) büyük veya ona eşit olamaz!");
+                return;
             }
             
-            if (d && s && w && n && g) {
-                let ct = (60 * Math.PI * parseFloat(d) * parseFloat(s) * parseFloat(n) * parseFloat(g) * parseFloat(w)) / Math.pow(10, 6);
-                document.getElementById("resultCT").textContent = ct.toFixed(2);
-            }
+            // Hesaplamalar
+            let d_max = s + (d / 40);
+            let ct = (60 * Math.PI * d * s * n * g * w) / Math.pow(10, 6);
+            
+            // Sonuçları Yazdır
+            document.getElementById("resultDmax").textContent = d_max.toFixed(2);
+            document.getElementById("resultCT").textContent = ct.toFixed(2);
+            
+            // Animasyonu Tetikle
+            let resultContainer = document.getElementById("result_container");
+            resultContainer.classList.remove("animate-pulse"); 
+            void resultContainer.offsetWidth; // Reflow
+            resultContainer.classList.add("animate-pulse"); 
         }
     </script>
 </body>
